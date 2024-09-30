@@ -20,7 +20,7 @@ This job sheet will guide you through the process of:
 Create an inventory file named `inventory.ini` with the following content:
 ```ini
 [blog]
-your_host_ip ansible_user=ubuntu ansible_ssh_private_key_file=/path/to/private/key.pem
+your_host_ip ansible_user=your_host_user ansible_ssh_private_key_file=/path/to/private/key.pem
 ```
 - **Objective**: Define the server’s IP, host user, and SSH key.
 - **Additional Exercise**: Modify the file to connect to a different server, if available.
