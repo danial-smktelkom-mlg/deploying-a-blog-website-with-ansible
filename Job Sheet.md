@@ -1,8 +1,3 @@
-
-Here's the updated job sheet with the necessary additions regarding the Apache configuration template:
-
----
-
 ### **Job Sheet: Deploying a Blog Website with Ansible**
 
 ---
@@ -147,50 +142,33 @@ Add a task to clone the blog repository from GitHub:
 
 #### **Exercise 4.2: Configure Apache for the Blog**
 
-1. **Create the Template File:**
-   Create a directory named `templates` in the same location as your `playbook.yml`, and create a file named `blog.conf.j2` inside that directory.
+##### **Exercise 4.2.1: Update Apache VirtualHost**
 
-   ```bash
-   mkdir -p templates
-   nano templates/blog.conf.j2
-   ```
+Use the `replace` module to update the Apache VirtualHost configuration:
+```yaml
+    - name: Update Apache VirtualHost for blog
+      replace:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: 'DocumentRoot /var/www/html'
+        replace: 'DocumentRoot /var/www/html/blog2'
+```
+- **Objective**: Automate Apache VirtualHost configuration for the blog.
+- **Additional Exercise**: Open the server IP in a browser to verify that the blog is accessible.
 
-2. **Add the Configuration:**
-   Here’s a basic example of what your `blog.conf.j2` file might look like:
+##### **Exercise 4.2.2: Enable Site Configuration and Restart Apache**
 
-   ```apache
-   <VirtualHost *:80>
-       ServerAdmin webmaster@localhost
-       DocumentRoot /var/www/html/blog2
-       ErrorLog ${APACHE_LOG_DIR}/error.log
-       CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-       <Directory /var/www/html/blog2>
-           AllowOverride All
-       </Directory>
-   </VirtualHost>
-   ```
-
-3. **Update Your Playbook:**
-   Ensure your playbook references the correct path to the `blog.conf.j2` template:
-
-   ```yaml
-    - name: Configure Apache for blog
-      template:
-        src: templates/blog.conf.j2
-        dest: /etc/apache2/sites-available/blog.conf
-
-    - name: Enable the blog site
-      command: a2ensite blog.conf
+Add tasks to enable the new site configuration and restart Apache:
+```yaml
+    - name: Enable the new site configuration
+      command: a2ensite 000-default.conf
 
     - name: Restart Apache to apply changes
       service:
         name: apache2
         state: restarted
-   ```
-
-- **Objective**: Configure Apache to serve the blog website.
-- **Additional Exercise**: Open the server IP in a browser to verify that the blog is accessible.
+```
+- **Objective**: Ensure the new site configuration is enabled and Apache is restarted for changes to take effect.
+- **Additional Exercise**: Check the Apache error log if the blog does not display correctly.
 
 ---
 
@@ -216,7 +194,3 @@ This job sheet provides a comprehensive guide for deploying a blog website using
 - Ensure that you have all necessary permissions to execute the tasks outlined in this job sheet.
 - Familiarize yourself with Ansible documentation for any specific commands or modules you may not understand.
 - Backup any existing configurations before making changes to your server.
-
---- 
-
-Feel free to make any additional modifications or let me know if you need further assistance!
