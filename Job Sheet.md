@@ -8,8 +8,8 @@ This job sheet will guide you through the process of:
 2. Installing necessary packages (Apache, MariaDB, and PHP).
 3. Installing Python dependencies for MySQL.
 4. Creating a MySQL database and user.
-5. Importing the SQL file into the database.
-6. Deploying the website from the GitHub repository.
+5. Deploying the website from the GitHub repository.
+6. Importing the SQL file into the database.
 
 ---
 
@@ -109,21 +109,6 @@ Add tasks to create the MySQL database and user:
 - **Objective**: Automate the creation of the database and user for the blog.
 - **Additional Exercise**: Verify by logging into MySQL and checking the created database and user.
 
-#### **Exercise 3.2: Importing SQL File into Database**
-
-Add a task to import the `db.sql` file into the `blog2` database:
-```yaml
-    - name: Import SQL file into database
-      mysql_db:
-        name: blog2
-        state: import
-        target: /var/www/html/blog2/db.sql
-        login_user: blog2
-        login_password: blog2
-```
-- **Objective**: Automate the import of the SQL file into the database.
-- **Additional Exercise**: Verify by checking the contents of the `blog2` database.
-
 ---
 
 ### **Step 4: Deploying the Website**
@@ -140,9 +125,24 @@ Add a task to clone the blog repository from GitHub:
 - **Objective**: Automate the cloning of the blog repository to the server.
 - **Additional Exercise**: Verify by checking if the files exist in `/var/www/html/blog2`.
 
-#### **Exercise 4.2: Configure Apache for the Blog**
+#### **Exercise 4.2: Importing SQL File into Database**
 
-##### **Exercise 4.2.1: Update Apache VirtualHost**
+Add a task to import the `db.sql` file into the `blog2` database:
+```yaml
+    - name: Import SQL file into database
+      mysql_db:
+        name: blog2
+        state: import
+        target: /var/www/html/blog2/db.sql
+        login_user: blog2
+        login_password: blog2
+```
+- **Objective**: Automate the import of the SQL file into the database.
+- **Additional Exercise**: Verify by checking the contents of the `blog2` database.
+
+#### **Exercise 4.3: Configure Apache for the Blog**
+
+##### **Exercise 4.3.1: Update Apache VirtualHost**
 
 Use the `replace` module to update the Apache VirtualHost configuration:
 ```yaml
@@ -155,7 +155,7 @@ Use the `replace` module to update the Apache VirtualHost configuration:
 - **Objective**: Automate Apache VirtualHost configuration for the blog.
 - **Additional Exercise**: Open the server IP in a browser to verify that the blog is accessible.
 
-##### **Exercise 4.2.2: Enable Site Configuration and Restart Apache**
+##### **Exercise 4.3.2: Enable Site Configuration and Restart Apache**
 
 Add tasks to enable the new site configuration and restart Apache:
 ```yaml
