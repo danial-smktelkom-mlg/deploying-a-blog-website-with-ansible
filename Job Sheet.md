@@ -6,9 +6,10 @@
 This job sheet will guide you through the process of:
 1. Setting up an inventory file and playbook.
 2. Installing necessary packages (Apache, MariaDB, and PHP).
-3. Creating a MySQL database and user.
-4. Importing the SQL file into the database.
-5. Deploying the website from the GitHub repository.
+3. Installing Python dependencies for MySQL.
+4. Creating a MySQL database and user.
+5. Importing the SQL file into the database.
+6. Deploying the website from the GitHub repository.
 
 ---
 
@@ -19,7 +20,7 @@ This job sheet will guide you through the process of:
 Create an inventory file named `inventory.ini` with the following content:
 ```ini
 [blog]
-your_host_ip ansible_user=your_host_user ansible_ssh_private_key_file=/path/to/private/key.pem
+your_host_ip ansible_user=ubuntu ansible_ssh_private_key_file=/path/to/private/key.pem
 ```
 - **Objective**: Define the server’s IP, host user, and SSH key.
 - **Additional Exercise**: Modify the file to connect to a different server, if available.
@@ -68,6 +69,18 @@ Extend the playbook to install Apache, MariaDB, and PHP:
 ```
 - **Objective**: Automate the installation of the necessary packages.
 - **Additional Exercise**: Verify the installations by checking the versions of each package.
+
+#### **Exercise 2.3: Install Python Dependencies for MySQL**
+
+Add a task to install Python MySQL dependencies:
+```yaml
+    - name: Install Python MySQL dependencies
+      apt:
+        name: python3-pymysql
+        state: present
+```
+- **Objective**: Ensure MySQL management modules work in Ansible.
+- **Additional Exercise**: Verify by running `pip show pymysql`.
 
 ---
 
