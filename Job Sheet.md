@@ -120,10 +120,10 @@ Add a task to clone the blog repository from GitHub:
     - name: Clone blog repository
       git:
         repo: https://github.com/danial-smktelkom-mlg/blog2.git
-        dest: /var/www/html/blog2
+        dest: /var/www/blog2
 ```
 - **Objective**: Automate the cloning of the blog repository to the server.
-- **Additional Exercise**: Verify by checking if the files exist in `/var/www/html/blog2`.
+- **Additional Exercise**: Verify by checking if the files exist in `/var/www/blog2`.
 
 #### **Exercise 4.2: Importing SQL File into Database**
 
@@ -133,7 +133,7 @@ Add a task to import the `db.sql` file into the `blog2` database:
       mysql_db:
         name: blog2
         state: import
-        target: /var/www/html/blog2/db.sql
+        target: /var/www/blog2/db.sql
         login_user: blog2
         login_password: blog2
 ```
@@ -150,7 +150,7 @@ Use the `replace` module to update the Apache VirtualHost configuration:
       replace:
         path: /etc/apache2/sites-available/000-default.conf
         regexp: 'DocumentRoot /var/www/html'
-        replace: 'DocumentRoot /var/www/html/blog2'
+        replace: 'DocumentRoot /var/www/blog2'
 ```
 - **Objective**: Automate Apache VirtualHost configuration for the blog.
 - **Additional Exercise**: Open the server IP in a browser to verify that the blog is accessible.
