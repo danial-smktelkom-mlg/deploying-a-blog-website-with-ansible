@@ -1,3 +1,8 @@
+
+Here's the updated job sheet with the necessary additions regarding the Apache configuration template:
+
+---
+
 ### **Job Sheet: Deploying a Blog Website with Ansible**
 
 ---
@@ -90,18 +95,21 @@ Add a task to install Python MySQL dependencies:
 
 Add tasks to create the MySQL database and user:
 ```yaml
-    - name: Create MySQL database
-      mysql_db:
-        name: blog2
-        state: present
-
-    - name: Create MySQL user
+    - name: Create MySQL admin user
       mysql_user:
         name: blog2
         password: blog2
-        host: localhost
-        priv: "blog2.*:ALL"
+        priv: "*.*:ALL,GRANT"
+        host: "%"
         state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Create Blog database
+      mysql_db:
+        name: blog2
+        state: present
+        login_user: blog2
+        login_password: blog2
 ```
 - **Objective**: Automate the creation of the database and user for the blog.
 - **Additional Exercise**: Verify by logging into MySQL and checking the created database and user.
@@ -114,7 +122,7 @@ Add a task to import the `db.sql` file into the `blog2` database:
       mysql_db:
         name: blog2
         state: import
-        target: /path/to/db.sql
+        target: /var/www/html/blog2/db.sql
         login_user: blog2
         login_password: blog2
 ```
@@ -139,11 +147,37 @@ Add a task to clone the blog repository from GitHub:
 
 #### **Exercise 4.2: Configure Apache for the Blog**
 
-Update Apache configuration for the blog:
-```yaml
+1. **Create the Template File:**
+   Create a directory named `templates` in the same location as your `playbook.yml`, and create a file named `blog.conf.j2` inside that directory.
+
+   ```bash
+   mkdir -p templates
+   nano templates/blog.conf.j2
+   ```
+
+2. **Add the Configuration:**
+   Here’s a basic example of what your `blog.conf.j2` file might look like:
+
+   ```apache
+   <VirtualHost *:80>
+       ServerAdmin webmaster@localhost
+       DocumentRoot /var/www/html/blog2
+       ErrorLog ${APACHE_LOG_DIR}/error.log
+       CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+       <Directory /var/www/html/blog2>
+           AllowOverride All
+       </Directory>
+   </VirtualHost>
+   ```
+
+3. **Update Your Playbook:**
+   Ensure your playbook references the correct path to the `blog.conf.j2` template:
+
+   ```yaml
     - name: Configure Apache for blog
       template:
-        src: blog.conf.j2
+        src: templates/blog.conf.j2
         dest: /etc/apache2/sites-available/blog.conf
 
     - name: Enable the blog site
@@ -153,7 +187,8 @@ Update Apache configuration for the blog:
       service:
         name: apache2
         state: restarted
-```
+   ```
+
 - **Objective**: Configure Apache to serve the blog website.
 - **Additional Exercise**: Open the server IP in a browser to verify that the blog is accessible.
 
@@ -181,3 +216,7 @@ This job sheet provides a comprehensive guide for deploying a blog website using
 - Ensure that you have all necessary permissions to execute the tasks outlined in this job sheet.
 - Familiarize yourself with Ansible documentation for any specific commands or modules you may not understand.
 - Backup any existing configurations before making changes to your server.
+
+--- 
+
+Feel free to make any additional modifications or let me know if you need further assistance!
